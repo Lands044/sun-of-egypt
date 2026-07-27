@@ -1,0 +1,982 @@
+$red: #a01602;
+$gold: #fdc909;
+$bg-gold: #FFA500;
+$purple: #f8612a;
+
+%border {
+	border: 4px solid $gold;
+	box-shadow: 0 0 6px rgba(246, 201, 139, 0.6);
+	padding: 2px;
+	border-radius: 8px;
+	max-width: 112px;
+	width: 100%;
+
+	@media (max-width:toEm($mobile)) and (pointer: coarse){
+		max-width: 100%; 
+	}
+}
+
+%border-wrap {
+	border: 4px solid $gold;
+	box-shadow: 0 0 6px rgba(246, 201, 139, 0.6);
+	border-radius: 6px;
+}
+
+%title-item {
+	color: $gold;
+	font-size: 24px;
+	font-weight: 900;
+	border-radius: 8px;
+	background-color: $red;
+
+	@media (max-width:toEm($mobileSmall)) and (pointer: coarse) {
+		font-size: 16px;
+	}
+}
+
+%span-effect {
+	/* 1) Заливка (теплий "золотий" градієнт) */
+	background: linear-gradient(180deg, #FFF2B3 0%, #FFC24A 45%, #FF8A00 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: $gold;
+
+	/* 2) Обводка навколо кожної букви */
+	-webkit-text-stroke: 1px #d53404;
+}
+
+
+.page {
+	background: url('../../../assets/img/bg.png') center/cover no-repeat;
+	min-height: 100vh;
+	min-height: 100dvh;
+	display: flex;
+	align-items: center;
+
+	@media (max-width:toEm($mobile)) and (pointer: coarse) {
+		align-items: flex-start;
+	}
+
+	&__container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			padding-top: 40px;
+			flex-direction: column;
+		}
+	}
+}
+
+.game {
+	width: 100%;
+	height: max-content;
+	position: relative;
+	z-index: 5;
+
+	&__wrap {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__logo {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: -10%;
+		left: 50%;
+		transform: translateX(-47%);
+		max-width: 600px;
+		width: 100%;
+		z-index: 100;
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+
+		@media (max-width:toEm($mobileSmall)) and (pointer: coarse){
+			top: -6%;
+		}
+	}
+
+	&__field {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 15px;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			flex-direction: column-reverse; 
+		}
+	}
+
+	&__right {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		opacity: 0;
+		pointer-events: none;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			display: none; 
+		}
+	}
+
+	&__left {
+		
+	}
+}
+
+
+.lines {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 6px;
+
+	&__title {
+		writing-mode: vertical-rl;
+		text-orientation: mixed;
+		transform: rotate(180deg);
+		color: $gold;
+		font-size: 28px;
+		font-weight: 900;
+		line-height: 1;
+		text-transform: uppercase;
+		letter-spacing: 3px;
+		text-shadow:
+			0 0 10px rgba(253, 201, 9, 0.8),
+			0 0 20px rgba(253, 201, 9, 0.4);
+		flex-shrink: 0;
+		padding-left: 40px;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			display: none;
+		}
+	}
+
+	&__bracket {
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		position: relative;
+
+		// Bracket left side
+		&::before {
+			content: '';
+			position: absolute;
+			left: -30px;
+			top: 12%;
+			height: 76%;
+			width: 6px;
+			border-left: 3px solid $gold;
+			border-top: 3px solid $gold;
+			border-bottom: 3px solid $gold;
+			border-radius: 4px 0 0 4px;
+			box-shadow: -2px 0 8px rgba(253, 201, 9, 0.5);
+		}
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			flex-direction: row;
+
+			&::before {
+				display: none;
+			}
+		}
+	}
+
+	&__item {
+		cursor: pointer;
+
+		button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+			width: 100%;
+			background: none;
+			border: none;
+			padding: 0;
+
+			img {
+				width: 170px;
+				height: auto;
+				object-fit: contain;
+				transition: transform 0.2s ease, filter 0.2s ease;
+				// filter: brightness(0.6) saturate(0.5);
+				display: block;
+
+				@media (max-height: toEm(800)) and (pointer: coarse) {
+					width: 125px;
+				}
+			}
+		}
+
+		&.active button img {
+			filter: brightness(1) saturate(1);
+			transform: scale(1.1);
+		}
+
+		&:hover:not(.active) button img {
+			filter: brightness(0.8) saturate(0.7);
+		}
+
+		&.locked {
+			cursor: default;
+			pointer-events: none;
+		}
+
+		@media (max-width:toEm($mobileSmall)) and (pointer: coarse){
+			button img {
+				width: 80px;
+			}
+		}
+	}
+
+	&__num {
+		position: absolute;
+		bottom: 8px;
+		right: 2px;
+		font-size: 22px;
+		font-weight: 900;
+		color: #3c3022;
+		-webkit-text-stroke: 1px #ffb700;
+		text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+		pointer-events: none;
+		transition: color 0.2s ease, -webkit-text-stroke 0.2s ease, text-shadow 0.2s ease;
+		line-height: 1;
+
+		@media (max-width:toEm($mobileSmall)) and (pointer: coarse){
+			font-size: 16px;
+		}
+	}
+
+	&__item.active &__num {
+		color: #fff;
+		-webkit-text-stroke: 1px #333;
+		text-shadow:
+			0 0 8px rgba(255, 255, 255, 0.9),
+			1px 1px 3px rgba(0,0,0,0.9);
+	}
+}
+
+.best {
+	@extend %border;
+
+	&__wrap {
+		@extend %border-wrap;
+		height: 160px;
+		background: $bg-gold;
+		position: relative;
+
+		&::after {
+			position: absolute;
+			content: '';
+			bottom: 5px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 80%;
+			height: 14px;
+			border-radius: 4px;
+			background-color: #65210c;
+		}
+	}
+
+	&__title {
+		padding: 5px 10px;
+		text-align: center;
+		text-transform: uppercase;
+		@extend %title-item;
+
+		span {
+			font-size: 12px;
+		}
+	}
+}
+
+
+.drum {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	overflow: hidden;
+	position: relative;
+
+	max-width: 1000px;
+	width: 100%;
+	background-color: $red;
+	// border: 6px solid $gold;
+	box-shadow: 0 0 6px rgba(246, 201, 139, 0.6);
+	padding: 10px;
+	border-radius: 16px;
+
+	&__spinner {
+		width: 100%;
+		height: 100%;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		background-color: $red;
+		
+		position: relative;
+		z-index: 10;
+		border: 6px solid $gold;
+		box-shadow: 0 0 6px rgba(246, 201, 139, 0.6);
+		border-radius: 12px;
+		overflow: hidden;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			grid-template-columns: repeat(3, 1fr); 
+		}
+	}
+
+	&__column {
+		position: relative;
+		overflow: hidden;
+		z-index: 10;
+		background-color: #430012;
+		box-shadow: 0 0 6px rgba(246, 201, 139, 0.6);
+		// Висота для 4 іконок на desktop
+		height: calc(150px * 4);
+
+		&:not(:first-child),
+		&:not(:last-child) {
+			margin: 2px 0.5px;
+		}
+
+		@media (max-height: toEm(800)) and (pointer: coarse) {
+			height: calc(110px * 4);
+		}
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			// Висота для 3 іконок на mobile
+			height: calc(140px * 3);
+
+			&:nth-child(4),
+			&:nth-child(5) {
+				display: none;
+			}
+		}
+
+		@media (max-width: toEm($mobileSmall)) and (max-height: toEm(800)) and (pointer: coarse) {
+			height: calc(105px * 3) !important;
+		}
+	}
+
+	// Стрічка з іконками для анімації обертання
+	&__strip {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+		filter: blur(0);
+		transition: filter 0.3s ease-in-out;
+
+		&.active {
+			filter: blur(1px);
+		}
+	}
+
+	&__image {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 150px;
+		flex-shrink: 0;
+
+		@media (max-height: toEm(800)) and (pointer: coarse) {
+			height: 110px;
+		}
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			height: 140px;
+			padding: 10px;
+		}
+
+		@media (max-width: toEm($mobileSmall)) and (max-height: toEm(800)) and (pointer: coarse) {
+			height: 105px !important;
+		}
+
+		img {
+			max-width: 100%;
+			max-height: 100%;
+			width: auto;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+}
+
+// Анімації виграшу
+.bigwin-animation {
+	animation: pulse 0.3s ease-in-out infinite alternate;
+}
+
+.smallwin-animation {
+	animation: pulse 0.5s ease-in-out 2;
+}
+
+@keyframes pulse {
+	from {
+		box-shadow: 0 0 6px rgba(246, 201, 139, 0.6);
+	}
+	to {
+		box-shadow: 0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.5);
+	}
+}
+
+// Вспишки при виграші
+.win-fire {
+	position: absolute;
+	inset: 0;
+	background: url('../../../assets/img/win-fire.webp') center / cover no-repeat;
+	pointer-events: none;
+	z-index: 1;
+	border-radius: 4px;
+	opacity: 0;
+	animation: winFireAppear 0.3s ease forwards;
+}
+
+@keyframes winFireAppear {
+	from {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+	to {
+		opacity: 0.75;
+		transform: scale(1);
+	}
+}
+
+// Icon above fire
+.drum__image.winning img {
+	position: relative;
+	z-index: 2;
+}
+
+.win-flash {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 215, 0, 0.8) 50%, transparent 70%);
+	border-radius: 50%;
+	pointer-events: none;
+	animation: flash 0.6s ease-out forwards;
+	z-index: 100;
+}
+
+@keyframes flash {
+	0% {
+		transform: scale(0);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(3);
+		opacity: 0;
+	}
+}
+
+// Виграшна лінія
+.win-line-svg {
+	opacity: 0;
+	transition: opacity 0.3s ease;
+
+	&.visible {
+		opacity: 1;
+	}
+}
+
+.win-line {
+	fill: none;
+	stroke: #ffcc00;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	filter: drop-shadow(0 0 8px rgba(255, 200, 0, 0.8)) drop-shadow(0 0 15px rgba(255, 150, 0, 0.6));
+	animation: lineGlow 0.5s ease-in-out infinite alternate;
+}
+
+.win-line-dot {
+	fill: #fff;
+	stroke: #ffcc00;
+	filter: drop-shadow(0 0 6px rgba(255, 200, 0, 0.9));
+	animation: dotPulse 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes lineGlow {
+	from {
+		filter: drop-shadow(0 0 8px rgba(255, 200, 0, 0.8)) drop-shadow(0 0 15px rgba(255, 150, 0, 0.6));
+	}
+	to {
+		filter: drop-shadow(0 0 12px rgba(255, 200, 0, 1)) drop-shadow(0 0 25px rgba(255, 150, 0, 0.8));
+	}
+}
+
+@keyframes dotPulse {
+	from {
+		opacity: 0.8;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+// Затемнення невиграшних іконок
+.drum__image.dimmed {
+	filter: brightness(0.4);
+	transition: filter 0.3s ease;
+}
+
+// Хитання виграшних іконок
+.drum__image.winning {
+	animation: wobble 0.4s ease-in-out infinite;
+	filter: brightness(1.1) drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+	z-index: 20;
+	position: relative;
+}
+
+@keyframes wobble {
+	0% {
+		transform: rotate(0deg);
+	}
+	25% {
+		transform: rotate(5deg);
+	}
+	50% {
+		transform: rotate(0deg);
+	}
+	75% {
+		transform: rotate(-5deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+
+// Paylines SVG
+.paylines-svg {
+	opacity: 0;
+	transition: opacity 0.3s ease;
+
+	&.visible {
+		opacity: 1;
+	}
+}
+
+.payline {
+	fill: none;
+	stroke: $gold;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	paint-order: stroke fill;
+	filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+}
+
+// Червона обводка для ліній
+.payline-stroke {
+	fill: none;
+	stroke: #d53404;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+
+.menu {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 90px;
+	z-index: 10;
+	background-color: rgba(132, 5, 1, 0.8);
+	color: #fff;
+	padding: 14px 0;
+	font-weight: 500;
+	font-size: 20px;
+
+	@media (max-width:toEm($pc)) and (pointer: coarse){
+		height: auto;
+	}
+
+	@media (max-width:toEm($mobile)) and (pointer: coarse){
+		padding: 0;
+	}
+
+	img {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 100%;
+	}
+
+	&__left {
+		display: flex;
+		align-items: center;
+		gap: 40px;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			flex-direction: column;
+			gap: 10px; 
+			align-items: flex-end;
+		}
+	}
+
+	&__wrap {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+		justify-content: center;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			flex-direction: row;
+			align-items: center;
+			gap: 5px;
+			position: absolute;
+			top: -50%;
+			left: 0;
+		}
+	}
+
+	&__items {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+	}
+
+	&__settings,
+	&__sound {
+		width: 40px;
+		height: 40px;
+		transition: all 0.3s ease;
+		position: relative;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			width: 60px;
+			height: 60px;
+		}
+
+		&:hover {
+			transform: scale(1.1);
+		}
+
+		&:active {
+			transform: scale(0.95);
+		}
+	}
+
+	&__sound {
+		&.sound-off {
+			opacity: 0.5;
+			filter: grayscale(1);
+
+			// Додаємо перекреслення (хрестик)
+			&::before,
+			&::after {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 100%;
+				height: 2px;
+				background: #ff0000;
+				transform-origin: center;
+				z-index: 2;
+				box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+			}
+
+			&::before {
+				transform: translate(-50%, -50%) rotate(45deg);
+			}
+
+			&::after {
+				transform: translate(-50%, -50%) rotate(-45deg);
+			}
+
+			&:hover {
+				opacity: 0.7;
+			}
+		}
+	}
+
+	&__info {
+		display: flex;
+		gap: 5px;
+
+		span {
+			display: inline;
+		}
+	}
+
+	&__bet {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5px;
+	}
+
+	&__credit {
+		padding: 15px 20px;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.2);
+		display: flex;
+		flex-direction: column;
+
+		p {
+			white-space: nowrap;
+			display: inline-block;
+		}
+
+		&-wrap {
+			margin-top: 10px;
+			display: flex;
+			gap: 4px;
+		}
+	}
+
+	&__arrows {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	&__button-arrow {
+		width: 40px;
+		height: 40px;
+		padding: 2px;
+		background-color: rgba(0, 0, 0, 0.2);
+
+		&.bottom {
+			transform: rotate(180deg);
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	&__right {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 15px;
+		transition: opacity 0.3s ease;
+
+		&.hidden {
+			opacity: 0;
+			transform: scale(0.8);
+			pointer-events: none;
+		}
+
+		span {
+			display: inline-block;
+		}
+
+		@media (max-width:toEm($mobileM)) and (pointer: coarse){
+			gap: 0;
+		}
+	}
+
+	&__button-auto,
+	&__button-spin {
+		transition: opacity 0.3s ease, filter 0.3s ease;
+
+		&.disabled {
+			opacity: 0.5;
+			filter: grayscale(0.5);
+			pointer-events: none;
+		}
+	}
+
+	&__button-auto {
+		width: 70px;
+		height: 70px;
+
+		@media (max-width:toEm($mobileSmall)) and (pointer: coarse){
+			width: 35px;
+			height: 35px;
+		}
+	}
+
+	&__button-spin {
+		width: 90px;
+		height: 90px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse){
+			width: 100px;
+			height: 100px;
+		}
+	}
+}
+
+
+.popup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.5s ease, visibility 0.5s ease;
+
+	&.show {
+		opacity: 1;
+		visibility: visible;
+
+		.popup__overlay {
+			opacity: 1;
+		}
+
+		.popup__content {
+			scale: 1;
+			opacity: 1;
+		}
+
+		.confetti-canvas {
+			opacity: 1;
+		}
+	}
+
+	&__overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.65);
+		backdrop-filter: blur(10px);
+		opacity: 0;
+		transition: opacity 0.5s ease;
+	}
+
+	&__content {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		scale: 0.7;
+		opacity: 0;
+		transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+		z-index: 100;
+	}
+
+	&__inner {
+		background-color: $red;
+		border: 4px solid #ffd700;
+		border-radius: 30px;
+		padding: 50px 60px;
+		text-align: center;
+		box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3),
+					0 0 40px rgba(255, 107, 157, 0.4),
+					inset 0 2px 20px rgba(255, 255, 255, 0.1);
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse) {
+			padding: 40px 30px;
+			border-radius: 20px;
+			border-width: 3px;
+		}
+	}
+
+	&__title {
+		font-size: 48px;
+		font-weight: 700;
+		color: #ffd700;
+		text-shadow: 0 0 20px rgba(255, 215, 0, 0.5),
+					 0 4px 8px rgba(0, 0, 0, 0.5);
+		margin-bottom: 20px;
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		animation: titleGlow 2s ease-in-out infinite;
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse) {
+			font-size: 24px;
+			margin-bottom: 15px;
+		}
+	}
+
+	&__text {
+		font-size: 24px;
+		font-weight: 600;
+		color: #fff;
+		margin-bottom: 40px;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse) {
+			font-size: 16px;
+			margin-bottom: 30px;
+		}
+	}
+}
+
+.cta-button {
+	background-color: $purple;
+	color: #fff;
+	padding: 15px 25px;
+	font-size: 22px;
+	font-weight: 700;
+	border-radius: 12px;
+	border: 2px solid #fff;
+	text-align: center;
+	animation: ctaPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes ctaPulse {
+	0% {
+		transform: scale(1);
+		box-shadow: 0 0 0 0 rgba($purple, 0.7);
+	}
+	50% {
+		transform: scale(1.05);
+		box-shadow: 0 0 20px 10px rgba($purple, 0.3);
+	}
+	100% {
+		transform: scale(1);
+		box-shadow: 0 0 0 0 rgba($purple, 0);
+	}
+}
+
+// Canvas для конфеті
+.confetti-canvas {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 99;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+
+	.popup.show & {
+		opacity: 1;
+	}
+
+	canvas {
+		display: block;
+	}
+}

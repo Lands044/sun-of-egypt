@@ -1,0 +1,160 @@
+<script type="module" src="@components/pages/index/index.js"></script>
+<link rel="stylesheet" href="@components/pages/index/index.scss">
+
+<main class="page">
+	<div class="page__container">
+
+		<div class="game">
+			<div class="game__wrap">
+				<div class="game__logo">
+					<img src="@img/logo.png" alt="Logo">
+				</div>
+
+				<div class="game__field">
+					<div class="game__left">
+						<div class="lines">
+							<div class="lines__title">Lines</div>
+							<ul class="lines__list">
+								<li class="lines__item" data-value="100">
+									<button type="button">
+										<img src="@img/lines/icon-1.webp" alt="100">
+										<span class="lines__num">100</span>
+									</button>
+								</li>
+								<li class="lines__item" data-value="80">
+									<button type="button">
+										<img src="@img/lines/icon-2.webp" alt="80">
+										<span class="lines__num">80</span>
+									</button>
+								</li>
+								<li class="lines__item active" data-value="60">
+									<button type="button">
+										<img src="@img/lines/icon-3.webp" alt="60">
+										<span class="lines__num">60</span>
+									</button>
+								</li>
+								<li class="lines__item" data-value="40">
+									<button type="button">
+										<img src="@img/lines/icon-4.webp" alt="40">
+										<span class="lines__num">40</span>
+									</button>
+								</li>
+								<li class="lines__item" data-value="20">
+									<button type="button">
+										<img src="@img/lines/icon-5.webp" alt="20">
+										<span class="lines__num">20</span>
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="drum">
+						<div class="drum__spinner">
+							<div class="drum__column">
+								<div class="drum__image"><img src="@img/icon/icon-1.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-2.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-3.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-4.png" alt="Icon game"></div>
+							</div>
+							<div class="drum__column">
+								<div class="drum__image"><img src="@img/icon/icon-5.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-6.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-7.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-8.png" alt="Icon game"></div>
+							</div>
+							<div class="drum__column">
+								<div class="drum__image"><img src="@img/icon/icon-1.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-2.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-3.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-4.png" alt="Icon game"></div>
+							</div>
+							<div class="drum__column">
+								<div class="drum__image"><img src="@img/icon/icon-5.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-6.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-7.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-8.png" alt="Icon game"></div>
+							</div>
+							<div class="drum__column">
+								<div class="drum__image"><img src="@img/icon/icon-1.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-2.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-3.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-4.png" alt="Icon game"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="game__right">
+						<div class="best">
+							<div class="best__wrap">
+								<div class="best__title">Best Win</div>
+							</div>
+						</div>
+						<div class="best">
+							<div class="best__wrap">
+								<div class="best__title">Best <span>Multiplier</span></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="menu">
+				<div class="menu__container">
+					<div class="menu__left">
+						<div class="menu__wrap">
+							<div class="menu__items">
+								<a href="#" class="menu__sound">
+									<img src="@img/button/sound.png" alt="Sound">
+								</a>
+							</div>
+							<div class="menu__info">
+								<span class="balance">Balance</span>
+								<span class="number">1000</span>
+								<span class="value">FUN</span>
+							</div>
+						</div>
+						<div class="menu__bet">
+							<div class="menu__credit">
+								<p>Total bet</p>
+								<div class="menu__credit-wrap">
+									<span class="number">1.20</span>
+									<span class="value">FUN</span>
+								</div>
+							</div>
+							<div class="menu__arrows">
+								<a class="menu__button-arrow" href="#">
+									<img src="@img/button/button-arrow.png" alt="Button top">
+								</a>
+								<a class="menu__button-arrow bottom" href="#">
+									<img src="@img/button/button-arrow.png" alt="Button bottom">
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<div class="menu__right">
+						<a href="#" class="menu__button-auto">
+							<img src="@img/button/auto-spin.png" alt="Auto Spin">
+						</a>
+						<a href="#" class="menu__button-spin">
+							<img src="@img/button/arrows.png" alt="Spin">
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="popup">
+				<div class="popup__overlay"></div>
+				<div class="popup__content">
+					<div class="popup__inner">
+						<h2 class="popup__title">Congratulations!</h2>
+						<p class="popup__text">Ready to continue playing?</p>
+						<a class="cta-button" href="#">Download Now</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</main>
