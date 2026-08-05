@@ -23,7 +23,7 @@ class SlotMachine {
 		// Стан гри
 		this.spinCount = 0;
 		this.isSpinning = false;
-		this.isSoundEnabled = true;
+		this.isSoundEnabled = false;
 
 		// Фінансові значення
 		this.balance = 1000.00;
@@ -65,7 +65,7 @@ class SlotMachine {
 		};
 
 		// Іконки (8 типів)
-		this.icons = 8;
+		this.icons = 12;
 		this.iconsPerReel = 100;
 
 		// Елементи Lines
@@ -270,7 +270,7 @@ class SlotMachine {
 				const iconNum = ((i + randomOffset) % this.icons) + 1;
 				const icon = document.createElement('div');
 				icon.className = 'drum__image';
-				icon.innerHTML = `<img src="@img/icon/icon-${iconNum}.png" alt="Icon ${iconNum}">`;
+				icon.innerHTML = `<img src="@img/icon/icon-${iconNum}.webp" alt="Icon ${iconNum}">`;
 				strip.appendChild(icon);
 			}
 
@@ -282,7 +282,7 @@ class SlotMachine {
 					columnIcons.forEach((iconNum) => {
 						const icon = document.createElement('div');
 						icon.className = 'drum__image';
-						icon.innerHTML = `<img src="@img/icon/icon-${iconNum}.png" alt="Icon ${iconNum}">`;
+						icon.innerHTML = `<img src="@img/icon/icon-${iconNum}.webp" alt="Icon ${iconNum}">`;
 						strip.appendChild(icon);
 					});
 				}
@@ -471,7 +471,7 @@ class SlotMachine {
 	// Отримує номер іконки з src
 	getIconNumber(img) {
 		const src = img.getAttribute('src');
-		const match = src.match(/icon-(\d+)\.png/);
+		const match = src.match(/icon-(\d+)\.webp/);
 		return match ? parseInt(match[1]) : 1;
 	}
 

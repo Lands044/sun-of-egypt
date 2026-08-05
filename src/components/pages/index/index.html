@@ -6,93 +6,73 @@
 
 		<div class="game">
 			<div class="game__wrap">
-				<div class="game__logo">
-					<img src="@img/logo.png" alt="Logo">
+				<div class="game__top">
+					<div class="game__logo">
+						<img src="@img/logo.webp" alt="Logo">
+					</div>
+
+					<div class="jackpots">
+						<div class="jackpots__item jackpots__item--grand">
+							<span class="jackpots__label">Grand</span>
+							<span class="jackpots__value">1,000.00</span>
+						</div>
+						<div class="jackpots__item jackpots__item--major">
+							<span class="jackpots__label">Major</span>
+							<span class="jackpots__value">150.00</span>
+						</div>
+						<div class="jackpots__item jackpots__item--mini">
+							<span class="jackpots__label">Mini</span>
+							<span class="jackpots__value">30.00</span>
+						</div>
+					</div>
 				</div>
 
 				<div class="game__field">
 					<div class="game__left">
-						<div class="lines">
-							<div class="lines__title">Lines</div>
-							<ul class="lines__list">
-								<li class="lines__item" data-value="100">
-									<button type="button">
-										<img src="@img/lines/icon-1.webp" alt="100">
-										<span class="lines__num">100</span>
-									</button>
-								</li>
-								<li class="lines__item" data-value="80">
-									<button type="button">
-										<img src="@img/lines/icon-2.webp" alt="80">
-										<span class="lines__num">80</span>
-									</button>
-								</li>
-								<li class="lines__item active" data-value="60">
-									<button type="button">
-										<img src="@img/lines/icon-3.webp" alt="60">
-										<span class="lines__num">60</span>
-									</button>
-								</li>
-								<li class="lines__item" data-value="40">
-									<button type="button">
-										<img src="@img/lines/icon-4.webp" alt="40">
-										<span class="lines__num">40</span>
-									</button>
-								</li>
-								<li class="lines__item" data-value="20">
-									<button type="button">
-										<img src="@img/lines/icon-5.webp" alt="20">
-										<span class="lines__num">20</span>
-									</button>
-								</li>
-							</ul>
+						<div class="lines-badge">
+							<span class="lines-badge__num">25</span>
+							<span class="lines-badge__text">Lines</span>
 						</div>
+						<ul class="lines__list" hidden>
+							<li class="lines__item active" data-value="25"></li>
+						</ul>
 					</div>
 
 					<div class="drum">
+						<span class="drum__corner drum__corner--tl"></span>
+						<span class="drum__corner drum__corner--tr"></span>
+						<span class="drum__corner drum__corner--bl"></span>
+						<span class="drum__corner drum__corner--br"></span>
 						<div class="drum__spinner">
 							<div class="drum__column">
-								<div class="drum__image"><img src="@img/icon/icon-1.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-2.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-3.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-4.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-1.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-2.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-3.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-4.webp" alt="Icon game"></div>
 							</div>
 							<div class="drum__column">
-								<div class="drum__image"><img src="@img/icon/icon-5.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-6.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-7.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-8.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-5.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-6.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-7.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-8.webp" alt="Icon game"></div>
 							</div>
 							<div class="drum__column">
-								<div class="drum__image"><img src="@img/icon/icon-1.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-2.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-3.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-4.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-1.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-2.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-3.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-4.webp" alt="Icon game"></div>
 							</div>
 							<div class="drum__column">
-								<div class="drum__image"><img src="@img/icon/icon-5.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-6.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-7.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-8.png" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-5.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-6.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-7.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-8.webp" alt="Icon game"></div>
 							</div>
 							<div class="drum__column">
-								<div class="drum__image"><img src="@img/icon/icon-1.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-2.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-3.png" alt="Icon game"></div>
-								<div class="drum__image"><img src="@img/icon/icon-4.png" alt="Icon game"></div>
-							</div>
-						</div>
-					</div>
-
-					<div class="game__right">
-						<div class="best">
-							<div class="best__wrap">
-								<div class="best__title">Best Win</div>
-							</div>
-						</div>
-						<div class="best">
-							<div class="best__wrap">
-								<div class="best__title">Best <span>Multiplier</span></div>
+								<div class="drum__image"><img src="@img/icon/icon-1.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-2.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-3.webp" alt="Icon game"></div>
+								<div class="drum__image"><img src="@img/icon/icon-4.webp" alt="Icon game"></div>
 							</div>
 						</div>
 					</div>
@@ -101,46 +81,45 @@
 
 			<div class="menu">
 				<div class="menu__container">
-					<div class="menu__left">
-						<div class="menu__wrap">
-							<div class="menu__items">
-								<a href="#" class="menu__sound">
-									<img src="@img/button/sound.png" alt="Sound">
-								</a>
-							</div>
-							<div class="menu__info">
-								<span class="balance">Balance</span>
-								<span class="number">1000</span>
-								<span class="value">FUN</span>
-							</div>
+					<div class="menu__info menu__info--balance">
+						<span class="menu__info-label">Balance</span>
+						<span class="menu__info-value">1,000.00</span>
+					</div>
+
+					<div class="menu__info menu__info--win">
+						<span class="menu__info-label">Win</span>
+					</div>
+
+					<div class="menu__bet">
+						<button type="button" class="menu__button-arrow minus">
+							<span></span>
+						</button>
+						<div class="menu__bet-value">
+							<span class="menu__bet-label">
+								<span class="menu__bet-icon"></span>
+								<span class="menu__info-label">Bet</span>
+							</span>
+							<span class="menu__info-value">1.00</span>
 						</div>
-						<div class="menu__bet">
-							<div class="menu__credit">
-								<p>Total bet</p>
-								<div class="menu__credit-wrap">
-									<span class="number">1.20</span>
-									<span class="value">FUN</span>
-								</div>
-							</div>
-							<div class="menu__arrows">
-								<a class="menu__button-arrow" href="#">
-									<img src="@img/button/button-arrow.png" alt="Button top">
-								</a>
-								<a class="menu__button-arrow bottom" href="#">
-									<img src="@img/button/button-arrow.png" alt="Button bottom">
-								</a>
-							</div>
-						</div>
+						<button type="button" class="menu__button-arrow plus">
+							<span></span>
+						</button>
 					</div>
 
 					<div class="menu__right">
-						<a href="#" class="menu__button-auto">
-							<img src="@img/button/auto-spin.png" alt="Auto Spin">
-						</a>
-						<a href="#" class="menu__button-spin">
-							<img src="@img/button/arrows.png" alt="Spin">
+						<a href="#" class="menu__sound sound-off">
+							<span class="menu__icon menu__icon--sound"></span>
+							<span class="menu__mute-line"></span>
 						</a>
 					</div>
+
+					<a href="#" class="menu__button-auto">
+						<img src="@img/button/auto-spin.png" alt="Auto Spin">
+					</a>
+					<a href="#" class="menu__button-spin">
+						<img src="@img/button/arrows.png" alt="Spin">
+						<span class="menu__button-spin-label">Hold for<br>Turbo Spin</span>
+					</a>
 				</div>
 			</div>
 
