@@ -18,8 +18,8 @@ class SlotMachine {
 		this.arrowButtons = document.querySelectorAll('.menu__button-arrow');
 
 		// Елементи UI
-		this.balanceElement = document.querySelector('.menu__info .number');
-		this.betElement = document.querySelector('.menu__credit .number');
+		this.balanceElement = document.querySelector('.menu__info--balance .menu__info-value');
+		this.betElement = document.querySelector('.menu__bet-value .menu__info-value');
 
 		// Стан гри
 		this.spinCount = 0;
@@ -227,7 +227,7 @@ class SlotMachine {
 		this.arrowButtons.forEach((button) => {
 			button.addEventListener('click', (e) => {
 				e.preventDefault();
-				if (button.classList.contains('bottom')) {
+				if (button.classList.contains('minus')) {
 					this.decreaseBet();
 				} else {
 					this.increaseBet();
