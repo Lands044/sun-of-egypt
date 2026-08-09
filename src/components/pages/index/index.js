@@ -11,8 +11,9 @@ class SlotMachine {
 		this.confettiAnimation = null;
 
 		// Кнопки
-		this.spinButton = document.querySelector('.menu__button-spin');
-		this.autoButton = document.querySelector('.menu__button-auto');
+		this.spinButton = document.querySelector('.game__button-spin');
+		this.autoButton = document.querySelector('.game__button-auto');
+		this.turboButton = document.querySelector('.game__button-turbo');
 		this.soundButton = document.querySelector('.menu__sound');
 		this.arrowButtons = document.querySelectorAll('.menu__button-arrow');
 
@@ -24,6 +25,8 @@ class SlotMachine {
 		this.spinCount = 0;
 		this.isSpinning = false;
 		this.isSoundEnabled = false;
+		this.isTurbo = false;
+		this.isAutoSpinning = false;
 
 		// Фінансові значення
 		this.balance = 1000.00;
@@ -37,7 +40,7 @@ class SlotMachine {
 			desktop: {
 				minWidth: 767.98,
 				cols: 5,
-				rows: 4,
+				rows: 3,
 				iconHeight: 150
 			},
 			mobile: {
@@ -94,37 +97,37 @@ class SlotMachine {
 					winAmount: 0,
 					winLine: null,
 					result: [
-						[2, 4, 1, 7],
-						[3, 5, 2, 8],
-						[1, 7, 4, 3],
-						[6, 2, 5, 1],
-						[4, 1, 3, 6]
+						[2, 4, 1],
+						[3, 5, 2],
+						[1, 7, 4],
+						[6, 2, 5],
+						[4, 1, 3]
 					]
 				},
 				{
 					type: 'smallwin',
 					winAmount: 50,
 					// Виграшна лінія: рядки 1-2 (горизонтальна лінія посередині)
-					winLine: [1, 1, 1, 1, null],
+					winLine: [1, 1, 1, 1],
 					result: [
-						[1, 3, 4, 5],
-						[7, 3, 8, 2],
-						[4, 3, 1, 8],
-						[2, 3, 4, 6],
-						[5, 6, 7, 3]
+						[1, 3, 4],
+						[7, 3, 8],
+						[4, 3, 1],
+						[2, 3, 4],
+						[5, 6, 7]
 					]
 				},
 				{
 					type: 'bigwin',
 					winAmount: 150,
 					// Виграшна лінія: рядки 1-2 (центральні) - діагональ вниз
-					winLine: [1, 1, 2, 2, 3],
+					winLine: [1, 1, 2, 2, 2],
 					result: [
-						[2, 8, 4, 7],
-						[5, 8, 2, 1],
-						[3, 4, 8, 4],
-						[1, 4, 8, 6],
-						[5, 3, 6, 8]
+						[2, 8, 4],
+						[5, 8, 2],
+						[3, 4, 8],
+						[1, 4, 8],
+						[5, 3, 6]
 					]
 				}
 			],
@@ -206,7 +209,12 @@ class SlotMachine {
 
 		this.autoButton.addEventListener('click', (e) => {
 			e.preventDefault();
-			this.handleSpin();
+			this.toggleAutoSpin();
+		});
+
+		this.turboButton.addEventListener('click', (e) => {
+			e.preventDefault();
+			this.toggleTurbo();
 		});
 
 		// Обробник кнопки звуку
@@ -378,15 +386,35 @@ class SlotMachine {
 		this.isSpinning = false;
 
 		if (this.spinCount >= results.length) {
+			this.isAutoSpinning = false;
+			this.autoButton.classList.remove('active');
 			this.showCTA();
+		} else if (this.isAutoSpinning) {
+			setTimeout(() => this.handleSpin(), 400);
 		}
 		// Кнопки розблоковуються після завершення анімації виграшу в showResult
+	}
+
+	// Перемикання прискорених (turbo) спінів
+	toggleTurbo() {
+		this.isTurbo = !this.isTurbo;
+		this.turboButton.classList.toggle('active', this.isTurbo);
+	}
+
+	// Перемикання безперервних авто-спінів
+	toggleAutoSpin() {
+		this.isAutoSpinning = !this.isAutoSpinning;
+		this.autoButton.classList.toggle('active', this.isAutoSpinning);
+
+		if (this.isAutoSpinning && !this.isSpinning) {
+			this.handleSpin();
+		}
 	}
 
 	// Анімація обертання всіх колонок
 	async spin(result) {
 		const columns = this.drumSpinner.querySelectorAll('.drum__column');
-		const duration = 3000;
+		const duration = this.isTurbo ? 900 : 3000;
 
 		// Запускаємо анімацію кожної колонки з затримкою
 		const spinPromises = Array.from(columns).map((column, colIndex) => {
@@ -708,7 +736,6 @@ class SlotMachine {
 	// Блокує кнопки спіну
 	disableSpinButtons() {
 		this.spinButton.classList.add('disabled');
-		this.autoButton.classList.add('disabled');
 		this.linesItems.forEach(item => item.classList.add('locked'));
 	}
 
@@ -719,7 +746,6 @@ class SlotMachine {
 		if (this.spinCount >= results.length) return;
 
 		this.spinButton.classList.remove('disabled');
-		this.autoButton.classList.remove('disabled');
 		this.linesItems.forEach(item => item.classList.remove('locked'));
 	}
 
