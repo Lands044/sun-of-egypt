@@ -365,16 +365,25 @@ class SlotMachine {
 		// Блокуємо кнопки
 		this.disableSpinButtons();
 
-		// Звук спіну
-		this.playSound('spin');
+		// Звук спіну (вимкнено за замовчуванням у прискореному режимі)
+		if (!this.isTurbo) {
+			this.playSound('spin');
+		}
 
 		const currentResult = results[this.spinCount];
 
 		// Запускаємо анімацію обертання
 		await this.spin(currentResult);
 
-		// Показуємо результат
-		this.showResult(currentResult);
+		const isLastSpin = this.spinCount + 1 >= results.length;
+
+		// Показуємо результат. Затримку до завершення анімації виграшу
+		// чекаємо лише якщо це не останній спін (щоб не тримати auto-spin перед CTA)
+		if (isLastSpin) {
+			this.showResult(currentResult);
+		} else {
+			await this.showResult(currentResult);
+		}
 
 		// Додаємо виграш
 		if (currentResult.winAmount > 0) {
@@ -505,41 +514,46 @@ class SlotMachine {
 
 	// Показ результату
 	showResult(result) {
-		if (result.type === 'bigwin') {
-			this.playSound('win');
-			this.drumSpinner.classList.add('bigwin-animation');
-			this.createWinEffects();
+		return new Promise((resolve) => {
+			if (result.type === 'bigwin') {
+				this.playSound('win');
+				this.drumSpinner.classList.add('bigwin-animation');
+				this.createWinEffects();
 
-			// Малюємо виграшну лінію
-			if (result.winLine) {
-				this.drawWinLine(result.winLine);
-			}
+				// Малюємо виграшну лінію
+				if (result.winLine) {
+					this.drawWinLine(result.winLine);
+				}
 
-			setTimeout(() => {
-				this.drumSpinner.classList.remove('bigwin-animation');
-				this.removeWinLine();
+				setTimeout(() => {
+					this.drumSpinner.classList.remove('bigwin-animation');
+					this.removeWinLine();
+					this.enableSpinButtons();
+					resolve();
+				}, 2000);
+
+			} else if (result.type === 'smallwin') {
+				this.playSound('win');
+				this.drumSpinner.classList.add('smallwin-animation');
+
+				// Малюємо виграшну лінію
+				if (result.winLine) {
+					this.drawWinLine(result.winLine);
+				}
+
+				setTimeout(() => {
+					this.drumSpinner.classList.remove('smallwin-animation');
+					this.removeWinLine();
+					this.enableSpinButtons();
+					resolve();
+				}, 1500);
+
+			} else {
+				// Програш - одразу розблоковуємо кнопки
 				this.enableSpinButtons();
-			}, 2000);
-
-		} else if (result.type === 'smallwin') {
-			this.playSound('win');
-			this.drumSpinner.classList.add('smallwin-animation');
-
-			// Малюємо виграшну лінію
-			if (result.winLine) {
-				this.drawWinLine(result.winLine);
+				resolve();
 			}
-
-			setTimeout(() => {
-				this.drumSpinner.classList.remove('smallwin-animation');
-				this.removeWinLine();
-				this.enableSpinButtons();
-			}, 1500);
-
-		} else {
-			// Програш - одразу розблоковуємо кнопки
-			this.enableSpinButtons();
-		}
+		});
 	}
 
 	// Малює виграшну лінію через SVG
