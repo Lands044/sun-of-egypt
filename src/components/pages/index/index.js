@@ -6,6 +6,8 @@ class SlotMachine {
 		this.drumSpinner = document.querySelector('.drum__spinner');
 		this.popup = document.querySelector('.popup');
 		this.buttonsWrap = document.querySelector('.menu__right');
+		this.winAmountEl = document.querySelector('.win-amount');
+		this.winAmountValueEl = document.querySelector('.win-amount__value');
 
 		// Анімація конфеті
 		this.confettiAnimation = null;
@@ -519,6 +521,7 @@ class SlotMachine {
 				this.playSound('win');
 				this.drumSpinner.classList.add('bigwin-animation');
 				this.createWinEffects();
+				this.showWinAmount(result.winAmount);
 
 				// Малюємо виграшну лінію
 				if (result.winLine) {
@@ -528,6 +531,7 @@ class SlotMachine {
 				setTimeout(() => {
 					this.drumSpinner.classList.remove('bigwin-animation');
 					this.removeWinLine();
+					this.hideWinAmount();
 					this.enableSpinButtons();
 					resolve();
 				}, 2000);
@@ -535,6 +539,7 @@ class SlotMachine {
 			} else if (result.type === 'smallwin') {
 				this.playSound('win');
 				this.drumSpinner.classList.add('smallwin-animation');
+				this.showWinAmount(result.winAmount);
 
 				// Малюємо виграшну лінію
 				if (result.winLine) {
@@ -544,6 +549,7 @@ class SlotMachine {
 				setTimeout(() => {
 					this.drumSpinner.classList.remove('smallwin-animation');
 					this.removeWinLine();
+					this.hideWinAmount();
 					this.enableSpinButtons();
 					resolve();
 				}, 1500);
@@ -554,6 +560,41 @@ class SlotMachine {
 				resolve();
 			}
 		});
+	}
+
+	// Показує число виграшу з анімованим підрахунком
+	showWinAmount(amount) {
+		if (!this.winAmountEl || !this.winAmountValueEl) return;
+
+		clearInterval(this.winCountInterval);
+
+		const duration = 800;
+		const steps = 30;
+		const stepTime = duration / steps;
+		let currentStep = 0;
+
+		this.winAmountValueEl.textContent = '0.00';
+		this.winAmountEl.classList.add('show');
+
+		this.winCountInterval = setInterval(() => {
+			currentStep++;
+			const value = (amount * currentStep) / steps;
+
+			if (currentStep >= steps) {
+				this.winAmountValueEl.textContent = amount.toFixed(2);
+				clearInterval(this.winCountInterval);
+			} else {
+				this.winAmountValueEl.textContent = value.toFixed(2);
+			}
+		}, stepTime);
+	}
+
+	// Приховує число виграшу
+	hideWinAmount() {
+		if (!this.winAmountEl) return;
+
+		clearInterval(this.winCountInterval);
+		this.winAmountEl.classList.remove('show');
 	}
 
 	// Малює виграшну лінію через SVG
