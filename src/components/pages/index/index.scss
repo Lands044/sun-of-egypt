@@ -591,7 +591,6 @@ $purple: #f8612a;
 
 		@media (max-width:toEm($mobile)) and (pointer: coarse){
 			height: 140px;
-			padding: 10px;
 		}
 
 		@media (max-width: toEm($mobileSmall)) and (max-height: toEm(800)) and (pointer: coarse) {
@@ -832,13 +831,13 @@ $purple: #f8612a;
 		}
 
 		&-label {
-			font-size: 19px;
-			font-weight: 400;
+			font-size: 20px;
+			font-weight: 500;
 			color: #fff;
 			opacity: 0.9;
 
 			@media (max-width:toEm($pc)) and (pointer: coarse){
-				font-size: 13px;
+				font-size: 14px;
 			}
 		}
 
