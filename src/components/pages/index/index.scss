@@ -52,11 +52,10 @@ $purple: #f8612a;
 	min-height: 100dvh;
 	display: flex;
 	align-items: center;
-	padding-bottom: 110px;
+	padding-bottom: 80px;
 
 	@media (max-width:toEm($mobile)) and (pointer: coarse) {
 		align-items: flex-start;
-		padding-bottom: 80px;
 	}
 
 	&__container {
@@ -91,7 +90,7 @@ $purple: #f8612a;
 		justify-content: center;
 		gap: 20px;
 		flex-wrap: wrap;
-		padding: 10px 20px 20px;
+		padding: 0 20px 20px;
 
 		@media (max-width:toEm($mobile)) and (pointer: coarse){
 			flex-direction: column;
