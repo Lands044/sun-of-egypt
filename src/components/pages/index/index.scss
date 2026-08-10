@@ -56,6 +56,7 @@ $purple: #f8612a;
 
 	@media (max-width:toEm($mobile)) and (pointer: coarse) {
 		align-items: flex-start;
+		padding-bottom: 80px;
 	}
 
 	&__container {
@@ -65,7 +66,7 @@ $purple: #f8612a;
 		height: 100%;
 
 		@media (max-width:toEm($mobile)) and (pointer: coarse){
-			padding-top: 40px;
+			padding-top: 0;
 			flex-direction: column;
 		}
 	}
@@ -128,8 +129,8 @@ $purple: #f8612a;
 		gap: 15px;
 		position: relative;
 
-		@media (max-width:toEm($mobile)) and (pointer: coarse){
-			flex-direction: column-reverse;
+		@media (max-width:toEm($pc)) and (pointer: coarse){
+			flex-direction: column;
 		}
 	}
 
@@ -141,10 +142,14 @@ $purple: #f8612a;
 		left: -64px;
 		transform: translateY(-50%);
 
-		@media (max-width:toEm($mobile)) and (pointer: coarse){
+		@media (max-width:toEm($pc)) and (pointer: coarse){
 			position: static;
 			transform: none;
 			margin-top: 10px;
+		}
+
+		@media (max-width:toEm($mobile)) and (pointer: coarse) {
+			display: none;
 		}
 	}
 
@@ -157,7 +162,7 @@ $purple: #f8612a;
 		height: 100%;
 		pointer-events: none;
 
-		@media (max-width:toEm($mobile)) and (pointer: coarse){
+		@media (max-width:toEm($pc)) and (pointer: coarse){
 			position: static;
 			transform: none;
 			width: auto;
@@ -165,6 +170,7 @@ $purple: #f8612a;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			flex-direction: row-reverse;
 			gap: 10px;
 			margin-top: 10px;
 			pointer-events: auto;
@@ -206,11 +212,11 @@ $purple: #f8612a;
 		pointer-events: none;
 	}
 
-	@media (max-width:toEm($mobile)) and (pointer: coarse){
+	@media (max-width:toEm($pc)) and (pointer: coarse){
 		position: static;
 		transform: none;
-		width: 64px;
-		height: 64px;
+		width: 80px;
+		height: 80px;
 
 		&:hover,
 		&:active {
@@ -218,8 +224,8 @@ $purple: #f8612a;
 		}
 
 		img {
-			width: 32px;
-			height: 32px;
+			width: 80px;
+			height: 80px;
 		}
 	}
 }
@@ -240,7 +246,7 @@ $purple: #f8612a;
 	padding: 20px 20px 32px;
 	pointer-events: none;
 
-	@media (max-width:toEm($mobile)) and (pointer: coarse){
+	@media (max-width:toEm($pc)) and (pointer: coarse){
 		display: none;
 	}
 }
@@ -255,8 +261,12 @@ $purple: #f8612a;
 	gap: 14px;
 	pointer-events: auto;
 
-	@media (max-width:toEm($mobile)) and (pointer: coarse){
+	@media (max-width:toEm($pc)) and (pointer: coarse){
 		position: static;
+	}
+
+	@media (max-width:toEm($mobile)) and (pointer: coarse) {
+		gap: 5px;
 	}
 }
 
@@ -424,7 +434,7 @@ $purple: #f8612a;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
 	flex-shrink: 0;
 
-	@media (max-width:toEm($mobile)) and (pointer: coarse){
+	@media (max-width:toEm($pc)) and (pointer: coarse){
 		flex-direction: row;
 		width: auto;
 		padding: 8px 16px;
@@ -459,7 +469,7 @@ $purple: #f8612a;
 		letter-spacing: 0;
 		text-shadow: 0 0 6px rgba(253, 201, 9, 0.7), 1px 1px 2px rgba(0, 0, 0, 0.9);
 
-		@media (max-width:toEm($mobile)) and (pointer: coarse){
+		@media (max-width:toEm($pc)) and (pointer: coarse){
 			flex-direction: row;
 			gap: 2px;
 		}
@@ -782,7 +792,7 @@ $purple: #f8612a;
 	font-weight: 500;
 	font-size: 24px;
 
-	@media (max-width:toEm($mobile)) and (pointer: coarse){
+	@media (max-width:toEm($pc)) and (pointer: coarse){
 		height: 84px;
 		font-size: 16px;
 	}
@@ -795,7 +805,7 @@ $purple: #f8612a;
 		padding: 0 32px;
 		gap: 24px;
 
-		@media (max-width:toEm($mobile)) and (pointer: coarse){
+		@media (max-width:toEm($pc)) and (pointer: coarse){
 			padding: 0 10px;
 			gap: 6px;
 		}
@@ -827,7 +837,7 @@ $purple: #f8612a;
 			color: #fff;
 			opacity: 0.9;
 
-			@media (max-width:toEm($mobile)) and (pointer: coarse){
+			@media (max-width:toEm($pc)) and (pointer: coarse){
 				font-size: 13px;
 			}
 		}
@@ -838,7 +848,7 @@ $purple: #f8612a;
 			color: #fff;
 			line-height: 1;
 
-			@media (max-width:toEm($mobile)) and (pointer: coarse){
+			@media (max-width:toEm($pc)) and (pointer: coarse){
 				font-size: 20px;
 			}
 		}
@@ -882,7 +892,7 @@ $purple: #f8612a;
 		flex-shrink: 0;
 		display: none;
 
-		@media (min-width:toEm($mobile)){
+		@media (min-width:toEm($pc)){
 			display: block;
 		}
 
@@ -1064,6 +1074,10 @@ $purple: #f8612a;
 		border-radius: 2px;
 		transform: translateY(-50%) rotate(-45deg);
 		display: none;
+
+		@media (max-width:toEm($mobileSmall)) and (pointer: coarse) {
+			left: 2px;
+		}
 	}
 
 	&__sound.sound-off &__mute-line {
