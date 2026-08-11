@@ -131,6 +131,10 @@ $purple: #f8612a;
 		@media (max-width:toEm($pc)) and (pointer: coarse){
 			flex-direction: column;
 		}
+
+		@media (max-width:toEm($mobile)){
+			gap: 0; 
+		}
 	}
 
 	&__left {
@@ -545,7 +549,7 @@ $purple: #f8612a;
 		}
 
 		@media (max-height: toEm(800)) and (pointer: coarse) {
-			height: calc(110px * 3);
+			height: calc(120px * 3);
 		}
 
 		@media (max-width:toEm($mobile)) and (pointer: coarse){
@@ -558,8 +562,9 @@ $purple: #f8612a;
 			}
 		}
 
-		@media (max-width: toEm($mobileSmall)) and (max-height: toEm(800)) and (pointer: coarse) {
-			height: calc(105px * 3) !important;
+		@media (max-width: toEm($mobileXS)) and (pointer: coarse),
+			(max-height: toEm(760)) and (pointer: coarse) {
+			height: calc(110px * 3) !important;
 		}
 	}
 
@@ -585,15 +590,16 @@ $purple: #f8612a;
 		flex-shrink: 0;
 
 		@media (max-height: toEm(800)) and (pointer: coarse) {
-			height: 110px;
+			height: 120px;
 		}
 
 		@media (max-width:toEm($mobile)) and (pointer: coarse){
 			height: 140px;
 		}
 
-		@media (max-width: toEm($mobileSmall)) and (max-height: toEm(800)) and (pointer: coarse) {
-			height: 105px !important;
+		@media (max-width: toEm($mobileXS)) and (pointer: coarse),
+			(max-height: toEm(760)) and (pointer: coarse) {
+			height: 110px !important;
 		}
 
 		img {
@@ -602,6 +608,10 @@ $purple: #f8612a;
 			width: auto;
 			height: 100%;
 			object-fit: contain;
+
+			@media (max-width:toEm($mobileSmall)) {
+				transform: scale(1.15);
+			}
 		}
 	}
 }
