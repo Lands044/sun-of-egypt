@@ -1,0 +1,46 @@
+{
+	"$comment": "Runtime config for this landing. This file is served as-is from the public folder and is fetched by the page on every load, so editing it changes the landing WITHOUT a rebuild. Reload the page (or let the dev watcher pick it up) and the landing re-renders.",
+	"version": 1,
+	"game": {
+		"rate": 20,
+		"multiplier": "2.00",
+		"outcomes": ["lose"],
+		"revealTime": 700,
+		"failResetTime": 1500,
+		"winLockTime": 10000
+	},
+	"cta": {
+		"url": "https://example.com/",
+		"target": "_self"
+	},
+	"texts": {
+		"actionButton": "PLAY",
+		"popupTitle": "Congratulations!",
+		"popupText": "Ready to continue playing?",
+		"ctaButton": "Continue",
+		"rotateNotice": "Please rotate your device to portrait mode"
+	},
+	"sound": {
+		"enabled": true,
+		"volume": 1
+	},
+	"assets": {
+		"$comment": "Values are either a built-in key (a filename under src/assets/img or src/assets/sound, no extension) or a URL. A URL starting with / , ./ , http:// or https:// is used verbatim, so you can drop custom art into the public folder and point at it here.",
+		"logo": "logo",
+		"background": "background",
+		"actor": "actor",
+		"actorLose": "actor-lose",
+		"sounds": {
+			"click": "click",
+			"reveal": "reveal",
+			"win": "win",
+			"lose": "lose"
+		}
+	},
+	"dev": {
+		"$comment": "watch polls this file and re-renders the landing in place when it changes. menu enables the config editor panel. Both are dev-only: the menu code is stripped from production builds entirely.",
+		"watch": true,
+		"watchInterval": 1500,
+		"menu": true
+	}
+}

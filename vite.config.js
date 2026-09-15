@@ -38,6 +38,8 @@ const isZip = process.argv.includes('--zip')
 const isFtp = process.argv.includes('--ftp')
 
 import { ignoredDirs, ignoredFiles } from './template_modules/ignored.js'
+// Dev-only writer for public/config.json, used by the config editor panel.
+import configWriter from './vite-plugins/config-writer.js'
 
 import Inspect from 'vite-plugin-inspect'
 import { getDev } from './template_modules/main.js'
@@ -63,7 +65,9 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 		clearScreen: true,
 		root: path.join(__dirname, "src"),
 		logLevel: "silent",
-		publicDir: false,
+		// Served at the site root in dev and copied into dist/ on build.
+		// Holds config.json, the runtime config the landing fetches on every load.
+		publicDir: path.join(__dirname, "public"),
 		server: {
 			open: isWp ? 'http://localhost:8080' : true,
 			host: templateConfig.server.hostname,
@@ -82,10 +86,17 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 				ignored: [
 					...ignoredDirs.map(dir => `**/${dir}/**`),
 					...ignoredFiles.map(file => `**/${file}/**`),
+					// config.json is picked up in place by the page's own config
+					// watcher. Leaving it to Vite would full-reload the page on every
+					// edit — including every keystroke in the config panel, which
+					// writes the file as you type.
+					`**/public/config.json`,
 				],
 			}
 		},
 		plugins: [
+			// Запис config.json з панелі налаштувань (тільки dev)
+			configWriter({ publicDir: path.join(__dirname, "public") }),
 			// Робота з HTML
 			...templateImports.htmlPlugins,
 			// Робота з скриптами
@@ -144,6 +155,9 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 				name: 'custom-hmr',
 				enforce: 'post',
 				handleHotUpdate({ file, server }) {
+					// See server.watch.ignored — the landing re-renders config.json
+					// itself, so a reload here would fight the in-place update.
+					if (file.replace(/\\/g, '/').endsWith('public/config.json')) return
 					if (file.endsWith('.html') || file.endsWith('.json') || file.endsWith('.php') || file.includes('fls-theme')) {
 						server.ws.send({ type: 'full-reload', path: '*' })
 					}

@@ -1,0 +1,58 @@
+<script type="module" src="@components/pages/index/index.js"></script>
+<link rel="stylesheet" href="@components/pages/index/index.scss">
+
+<main class="page">
+	<div class="container-wrap">
+		<div class="container">
+			<div class="logo">
+				<img src="@img/logo.webp" alt="" />
+			</div>
+
+			<!-- Replace this block with your actual scene (reels, wheel, cards...).
+			     Everything inside is placeholder for "click to reveal a win/loss". -->
+			<div class="game" id="game">
+				<div class="actor" id="actor">
+					<img class="actor__default" src="@img/actor.webp" alt="" />
+					<img class="actor__lose" src="@img/actor-lose.webp" alt="" />
+					<div class="game__multify" id="multiplier-element">
+						<span id="multiplier-value">2.00</span>X
+					</div>
+				</div>
+			</div>
+
+			<div class="game-controls__wrapper">
+				<div class="game-controls" id="game-controls">
+					<div class="game-controls__block is--last">
+						<button class="game-controls__cash-btn" type="button" id="cash-btn">
+							<div class="game-controls__cash-btn-inner">
+								<span class="game-controls__cash-btn-label">CASH OUT</span>
+								<br />
+								<span id="balance">20</span>
+							</div>
+						</button>
+						<div class="game-controls__go-btn">
+							<button class="bottom__section-button pulse" id="go-btn">
+								<span class="bottom__section-button-default" id="action-btn-text">PLAY</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="effects hidden" id="effects">
+		<img loading="lazy" class="effects__image hidden" id="effects-image" src="" alt="" />
+	</div>
+
+	<div class="popup" id="popup">
+		<div class="popup__overlay"></div>
+		<div class="popup__content">
+			<div class="popup__inner">
+				<h2 class="popup__title">Congratulations!</h2>
+				<p class="popup__text">Ready to continue playing?</p>
+				<a class="cta-button" id="win-cta" href="#">Continue</a>
+			</div>
+		</div>
+	</div>
+</main>

@@ -1,0 +1,213 @@
+// ---------------------------------------------------------------------------
+// Scale
+//
+// Kept from chicken-road: the whole scene is em-based off one root value, and
+// that value is expressed purely in viewport units — no px, no rem. That is what
+// makes the landing immune to browser zoom (which resizes the CSS viewport, so
+// vw/vh keep their fraction of the window while px would not). Keep any CSS you
+// add here in em/vh/vw and avoid width breakpoints, or the single form breaks.
+// See docs/config.md ("One fixed form") in the core kit for the full rationale.
+// ---------------------------------------------------------------------------
+html {
+	overflow: hidden;
+	background: #1a1a1a;
+	font-size: min(1.63vw, 1.07vh);
+}
+
+body {
+	position: fixed;
+	inset: 0;
+	overflow: hidden;
+	overscroll-behavior: none;
+	touch-action: manipulation;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+img {
+	width: 100%;
+	display: block;
+}
+
+.page {
+	height: 100vh;
+	height: 100dvh;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.container-wrap {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.logo {
+	max-width: 20.9vh;
+	height: 9vh;
+	margin: 1vh auto;
+}
+
+// ============================================
+// Placeholder game scene — replace with your mechanic.
+// ============================================
+.game {
+	position: relative;
+	width: 100%;
+	min-height: 40vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.actor {
+	position: relative;
+	width: 16em;
+
+	&__lose { display: none; }
+	&.is--lose {
+		.actor__default { display: none; }
+		.actor__lose { display: block; }
+	}
+}
+
+.game__multify {
+	text-align: center;
+	font-size: 3em;
+	color: #ffd257;
+	margin-top: 0.5em;
+}
+
+// ============================================
+// Controls
+// ============================================
+.game-controls__wrapper {
+	padding: 0 6em;
+	margin: 2em 0;
+}
+
+.game-controls {
+	display: flex;
+	justify-content: center;
+
+	&__block { display: flex; gap: 16px; }
+
+	&__cash-btn {
+		background: #2a2a2a;
+		border: none;
+		border-radius: 12px;
+		padding: 10px 16px;
+		color: #fff;
+	}
+}
+
+.bottom__section-button {
+	background-color: #3ec55b;
+	color: #fff;
+	border: none;
+	border-radius: 20px;
+	min-height: 7vh;
+	min-width: 50px;
+	padding: 10px 24px;
+	font-size: 1.6em;
+
+	&:disabled { opacity: 0.5; }
+}
+
+// ============================================
+// Popup — the scale trick and both bugs it fixes are documented in
+// docs/config.md ("Не используйте отдельное свойство scale...").
+// ============================================
+.popup {
+	// One scale knob for the whole dialog: every size below is `calc(N * var(--u))`.
+	// Aspect-driven like the root scale, so it holds its proportions at any zoom.
+	--u: min(0.13vw, 0.0926vh);
+
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: none;
+	align-items: center;
+	justify-content: center;
+
+	&.show {
+		display: flex;
+
+		.popup__overlay { opacity: 1; }
+		.popup__content {
+			transform: translate(-50%, -50%) scale(1);
+			opacity: 1;
+		}
+	}
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.65);
+		backdrop-filter: blur(calc(10 * var(--u)));
+		opacity: 0;
+		transition: opacity 0.5s ease;
+	}
+
+	&__content {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		// Scale lives inside `transform`, never as a separate `scale` property next
+		// to `translate(-50%, -50%)` — see docs/config.md for why that combination
+		// drags the popup sideways as it animates.
+		transform: translate(-50%, -50%) scale(0.7);
+		opacity: 0;
+		transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+		z-index: 100;
+	}
+
+	&__inner {
+		background: #1f3d2a;
+		border: calc(4 * var(--u)) solid #ffd257;
+		border-radius: calc(30 * var(--u));
+		padding: calc(50 * var(--u)) calc(60 * var(--u));
+		text-align: center;
+	}
+
+	&__title {
+		font-size: calc(48 * var(--u));
+		font-weight: 700;
+		color: #ffd257;
+		margin-bottom: calc(20 * var(--u));
+		text-transform: uppercase;
+	}
+
+	&__text {
+		font-size: calc(24 * var(--u));
+		color: #fff;
+		margin-bottom: calc(40 * var(--u));
+	}
+}
+
+.cta-button {
+	display: inline-block;
+	background: #3ec55b;
+	color: #fff;
+	padding: calc(15 * var(--u)) calc(25 * var(--u));
+	font-size: calc(22 * var(--u));
+	font-weight: 700;
+	border-radius: calc(12 * var(--u));
+	border: calc(2 * var(--u)) solid #fff;
+	text-decoration: none;
+}
+
+body.is--modal-open {
+	overflow: hidden;
+}
+
+.effects {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 900;
+
+	&.hidden { display: none; }
+}
