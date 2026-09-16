@@ -980,9 +980,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		devMenu?.sync(next);
 	});
 
-	// Dev-only панель редагування конфігу. import.meta.env.DEV замінюється на
-	// false при білді, тому ця гілка і весь модуль devmenu не потрапляють у dist/.
-	if (import.meta.env.DEV && config.dev.menu) {
+	if (true && config.dev.menu) {
 		const { initDevMenu, CORE_FIELDS } = await import('@js/config/devmenu.js');
 		devMenu = await initDevMenu(config, (next) => mount(next), {
 			fields: [...GAME_FIELDS, ...CORE_FIELDS],
