@@ -54,7 +54,7 @@ class SlotMachine {
 		// Стан гри
 		this.spinCount = 0;
 		this.isSpinning = false;
-		this.isSoundEnabled = false;
+		this.isSoundEnabled = config.sound.enabled;
 		this.isTurbo = false;
 		this.isAutoSpinning = false;
 
@@ -96,6 +96,7 @@ class SlotMachine {
 			win: new Audio(soundUrl(config.assets.sounds.win, 'win')),
 			select: new Audio(soundUrl(config.assets.sounds.select, 'select'))
 		};
+		Object.values(this.sounds).forEach(sound => { sound.volume = config.sound.volume; });
 
 		// Іконки (8 типів)
 		this.icons = 12;
@@ -222,6 +223,9 @@ class SlotMachine {
 				this.handleLinesClick(item);
 			});
 		});
+
+		// Стан кнопки звуку відповідно до config.sound.enabled
+		this.soundButton.classList.toggle('sound-off', !this.isSoundEnabled);
 
 		// Оновлюємо UI
 		this.updateUI();
