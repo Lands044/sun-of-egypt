@@ -271,9 +271,13 @@ ${templateResult.skippedFiles.map(f => `- \`${f}\``).join('\n')}
 4. У кінці \`src/components/pages/index/index.js\` додай виклик
    \`registerGameConfig()\` (з нового \`normalize.js\`) ПЕРЕД \`loadConfig()\`,
    підключи \`watchConfig()\` для live-релоаду в dev, і (за
-   \`import.meta.env.DEV && config.dev.menu\`) — \`initDevMenu\` з
-   \`@js/config/devmenu.js\`, передавши власний \`GAME_FIELDS\` разом з
-   \`CORE_FIELDS\`.
+   \`config.dev.menu\`) — \`initDevMenu\` з \`@js/config/devmenu.js\`, передавши
+   власний \`GAME_FIELDS\` разом з \`CORE_FIELDS\`. За замовчуванням панель
+   вантажиться і в production-білді — там вона пише зміни в localStorage
+   браузера замість \`public/config.json\` (нема кому приймати запис на
+   статичному хостингу), з кнопкою "Скачати" для експорту готового файлу.
+   Якщо потрібен строго dev-only варіант (панель зникає з \`dist/\` повністю) —
+   постав умову \`import.meta.env.DEV && config.dev.menu\`, як було раніше.
 
 5. Онови \`public/config.json\` так, щоб він відображав реальні поточні
    значення гри (те, що зараз хардкоджено в коді) — щоб після інтеграції
@@ -282,8 +286,12 @@ ${templateResult.skippedFiles.map(f => `- \`${f}\``).join('\n')}
 6. Перевір: \`npm run dev\`, відкрий сторінку, переконайся що гра виглядає й
    грається так само, як до змін. Зміни щось у панелі конфігу (текст кнопки
    або число) — переконайся, що сторінка оновлюється без релоаду.
-   \`npm run build\` — переконайся, що \`dist/config.json\` існує і
-   \`grep -r devmenu dist/\` не знаходить нічого.
+   \`npm run build\` — переконайся, що \`dist/config.json\` існує. Якщо
+   лишив панель dev-only (\`import.meta.env.DEV && config.dev.menu\`) —
+   \`grep -r devmenu dist/\` має бути порожнім; якщо панель ships і в
+   production (дефолт) — знаходження там очікуване, перевір натомість, що
+   панель у зібраному \`dist/\` відкривається і пише в localStorage (бейдж
+   "prod", а не "dev").
 
 **Не роби:** не переписуй анімації/CSS-геометрію "про всяк випадок", не
 рефактори те, що не звʼязано з винесенням значень у конфіг, не видаляй
@@ -316,7 +324,11 @@ placeholder ("клік → win/lose"). Твоє завдання — замін�
 
 5. Перевір: \`npm run dev\`, погратись, переконатись що панель конфігу вгорі
    праворуч редагує гру наживо. \`npm run build\`, переконатись що
-   \`dist/config.json\` існує і \`grep -r devmenu dist/\` порожній.
+   \`dist/config.json\` існує; панель за замовчуванням лишається доступною і
+   в production-білді (пише зміни в localStorage браузера, не на сервер —
+   див. "The config menu" в \`docs/config.md\`), тож \`grep -r devmenu dist/\`
+   знаходить її код навмисно. Якщо потрібен dev-only варіант — постав умову
+   \`import.meta.env.DEV && config.dev.menu\` в \`index.js\`.
 `
 
 const migrationPrompt = `# Промпт для Claude Code: доведення config-kit до готовності

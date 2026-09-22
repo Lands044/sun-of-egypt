@@ -140,3 +140,5 @@ vite.config.ts.timestamp-*
 
 .vscode
 .DS_Store
+CLAUDE.md
+MIGRATION_PROMPT.md

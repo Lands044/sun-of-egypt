@@ -216,9 +216,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 		devMenu?.sync(next)
 	})
 
-	// Dev-only config editor. import.meta.env.DEV is replaced with `false` at build
-	// time, so this branch and the whole devmenu chunk are dropped from dist/.
-	if (import.meta.env.DEV && config.dev.menu) {
+	// Config editor panel — ships in production too (config.dev.menu controls it).
+	// In dev it writes straight to public/config.json; in a built preview/
+	// production it falls back to this browser's localStorage instead (see
+	// docs/config.md, "The config menu" — production mode). Set this back to
+	// `import.meta.env.DEV && config.dev.menu` to make it dev-only again.
+	if (config.dev.menu) {
 		const { initDevMenu, CORE_FIELDS } = await import('@js/config/devmenu.js')
 		devMenu = await initDevMenu(config, next => mount(next), {
 			fields: [...GAME_FIELDS, ...CORE_FIELDS],

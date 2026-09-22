@@ -107,13 +107,17 @@ export const DEFAULT_CONFIG = {
 		}
 	},
 
-	texts: {
-		...CORE_DEFAULTS.texts,
+	// actionButton/rotateNotice from CORE_DEFAULTS.texts are dropped — this game
+	// has no single action button (spinButtonLabel covers it) and no rotate-to-
+	// portrait overlay, so neither field is read anywhere (see docs/config.md,
+	// "No dead or hidden fields").
+	texts: (({ actionButton, rotateNotice, ...rest }) => ({
+		...rest,
 		popupTitle: "Congratulations!",
 		popupText: "Ready to continue playing?",
 		ctaButton: "Download Now",
 		spinButtonLabel: "Hold for<br>Turbo Spin"
-	},
+	}))(CORE_DEFAULTS.texts),
 
 	assets: {
 		...CORE_DEFAULTS.assets,

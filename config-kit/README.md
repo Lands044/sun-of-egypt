@@ -1,5 +1,9 @@
 # Config Kit
 
+```bash
+node config-kit/install.mjs .
+```
+
 Runtime-config system extracted from this project (Chicken Road), generalized so
 it can be dropped into **any other landing built on the same FLS/Vite template** —
 regardless of the game mechanic. Same idea as here: the landing reads
@@ -75,15 +79,21 @@ itself.
    `actor-lose.webp`, `background.webp`) and audio into `src/assets/sound`
    (`click.mp3`, `reveal.mp3`, `win.mp3`, `lose.mp3`) — or just repoint
    `public/config.json`'s `assets` block at whatever files/URLs you already have.
-2. `npm run dev` — open the page. A panel appears top-right (dev only); editing a
-   field there rewrites `public/config.json` and the page re-renders live.
+2. `npm run dev` — open the page. A panel appears top-right; editing a field
+   there rewrites `public/config.json` and the page re-renders live.
 3. Rewrite `src/components/pages/index/render.js` and the `Game` class in
    `index.js` for the actual mechanic, following **"Extending for a new
    mechanic"** in `core/docs/config.md` (also copied into the target as
    `docs/config.md`). The five-step pattern — defaults, normalizer, config.json,
    render, devmenu fields — is the same regardless of what the game does.
-4. `npm run build` — verify `dist/config.json` exists and
-   `grep -r devmenu dist/` is empty (the dev panel must not ship).
+4. `npm run build` — verify `dist/config.json` exists. Whether the panel itself
+   ships in `dist/` is a deliberate choice in `index.js` (see "The config menu"
+   in `docs/config.md`): `game-template` ships it — in production it edits
+   `localStorage` instead of `public/config.json`, since there's no server to
+   write to — so `grep -r devmenu dist/` finding matches there is expected, not
+   a bug. Switch the `index.js` condition to `import.meta.env.DEV &&
+   config.dev.menu` for the original dev-only behavior instead, where that grep
+   empty is the thing to verify.
 
 ## Why this shape
 

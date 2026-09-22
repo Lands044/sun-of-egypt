@@ -980,10 +980,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 		devMenu?.sync(next);
 	});
 
-	if (true && config.dev.menu) {
+	if (config.dev.menu) {
 		const { initDevMenu, CORE_FIELDS } = await import('@js/config/devmenu.js');
+		// Ця гра не має єдиної "кнопки дії" (є свій spinButtonLabel) — прибираємо
+		// texts.actionButton з CORE_FIELDS, бо нічого в грі його не читає.
+		const coreFields = CORE_FIELDS.map(([group, fields]) => [
+			group,
+			fields.filter((field) => field.path !== 'texts.actionButton')
+		]);
 		devMenu = await initDevMenu(config, (next) => mount(next), {
-			fields: [...GAME_FIELDS, ...CORE_FIELDS],
+			fields: [...GAME_FIELDS, ...coreFields],
 			title: 'НАСТРОЙКИ'
 		});
 	}

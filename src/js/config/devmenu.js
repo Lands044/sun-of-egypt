@@ -1,15 +1,20 @@
-import { mergeConfig, normalizeConfig, saveConfig, CONFIG_URL } from './config.js'
+import { mergeConfig, normalizeConfig, saveConfig, saveLocalConfig, loadLocalConfig, clearLocalConfig, CONFIG_URL } from './config.js'
 
-// Dev-only config editor, game-agnostic.
+// Config editor panel, game-agnostic. Whether it ships in a production build is
+// the game's own call (see index.js: `config.dev.menu` gates it — the game
+// decides whether that stays true in the built config.json, or set it to
+// `import.meta.env.DEV && config.dev.menu` to keep it dev-only again).
 //
-// This module is only ever reached from an `import.meta.env.DEV` branch, so it is
-// dropped from production builds entirely — nothing here ships in dist/. Its CSS
-// is injected as a string for the same reason: a .scss import would be pulled
-// into the production stylesheet.
-//
-// Every edit is written straight back to public/config.json through a dev-only
-// endpoint, so the file is always the current state and a refresh picks up
-// exactly what you last had. "Download" is still there for grabbing a copy.
+// Two save modes, picked automatically by whether a dev server is behind the
+// page:
+// - dev (import.meta.env.DEV): every edit is written straight back to
+//   public/config.json through the dev-only /__config endpoint, so a refresh
+//   picks up exactly what you last had, on every device that loads the page.
+// - production (a static build, no write endpoint behind it): every edit is
+//   written to this browser's localStorage instead. It survives a refresh on
+//   this device only — public/config.json on the server never changes, and
+//   nobody else sees the edit. "Download" exports the edited config.json to
+//   deploy it for real.
 //
 // FIELDS is generic (texts/CTA/sound). A game adds its own groups — see
 // game-template/src/components/pages/index/devmenu.fields.js — and passes the
@@ -114,14 +119,14 @@ const CSS = `
 export const CORE_FIELDS = [
 	['Тексти', [
 		{ path: 'texts.actionButton', label: 'Кнопка дії', type: 'text' },
-		{ path: 'texts.popupTitle', label: 'Заголовок окна', type: 'text' },
-		{ path: 'texts.popupText', label: 'Текст окна', type: 'text' },
+		{ path: 'texts.popupTitle', label: 'Заголовок вікна', type: 'text' },
+		{ path: 'texts.popupText', label: 'Текст вікна', type: 'text' },
 		{ path: 'texts.ctaButton', label: 'Кнопка CTA', type: 'text' },
-		{ path: 'cta.url', label: 'Ссылка CTA', type: 'text' }
+		{ path: 'cta.url', label: 'Посилання CTA', type: 'text' }
 	]],
 	['Звук', [
-		{ path: 'sound.enabled', label: 'Включён', type: 'checkbox' },
-		{ path: 'sound.volume', label: 'Громкость', type: 'range', min: 0, max: 1, step: 0.05 }
+		{ path: 'sound.enabled', label: 'Увімкнено', type: 'checkbox' },
+		{ path: 'sound.volume', label: 'Гучність', type: 'range', min: 0, max: 1, step: 0.05 }
 	]]
 ]
 
@@ -166,17 +171,27 @@ const writeInput = (field, input, value) => {
  *                       [...GAME_FIELDS, ...CORE_FIELDS].
  * @param title          panel title, e.g. the game's name
  */
-export async function initDevMenu(initialConfig, onApply, { fields = CORE_FIELDS, title = 'НАСТРОЙКИ' } = {}) {
+export async function initDevMenu(initialConfig, onApply, { fields = CORE_FIELDS, title = 'НАЛАШТУВАННЯ' } = {}) {
 	let config = initialConfig
 	const inputs = new Map()
+	// import.meta.env.DEV is replaced at build time, so this branch is resolved
+	// once and for all when the game bundles the panel into a production build.
+	const isDevServer = import.meta.env.DEV
 
 	// The file as written, not the normalized config: saving this back preserves
-	// the $comment documentation and any keys the panel does not manage.
+	// the $comment documentation and any keys the panel does not manage. In
+	// production this browser's own local edits (if any) take precedence — same
+	// source loadConfig() itself reads from, so the panel and the page agree.
 	let raw
-	try {
-		raw = await (await fetch(CONFIG_URL, { cache: 'no-store' })).json()
-	} catch {
-		raw = structuredClone(config)
+	if (!isDevServer) {
+		raw = loadLocalConfig()
+	}
+	if (!raw) {
+		try {
+			raw = await (await fetch(CONFIG_URL, { cache: 'no-store' })).json()
+		} catch {
+			raw = structuredClone(config)
+		}
 	}
 
 	const style = document.createElement('style')
@@ -190,7 +205,8 @@ export async function initDevMenu(initialConfig, onApply, { fields = CORE_FIELDS
 
 	const head = document.createElement('div')
 	head.className = 'devmenu__head'
-	head.innerHTML = `<span class="devmenu__title">${title}</span><span class="devmenu__badge">dev</span><span>▾</span>`
+	const badgeLabel = isDevServer ? 'dev' : 'prod'
+	head.innerHTML = `<span class="devmenu__title">${title}</span><span class="devmenu__badge">${badgeLabel}</span><span>▾</span>`
 	head.addEventListener('click', () => {
 		panel.classList.toggle('is--collapsed')
 		localStorage.setItem('devmenu:collapsed', panel.classList.contains('is--collapsed') ? '1' : '0')
@@ -210,16 +226,21 @@ export async function initDevMenu(initialConfig, onApply, { fields = CORE_FIELDS
 
 	// Debounced so dragging the volume slider writes once, not sixty times.
 	const scheduleSave = () => {
-		setStatus('сохранение…')
+		setStatus('збереження…')
 		clearTimeout(saveTimer)
 		saveTimer = setTimeout(async () => {
-			const result = await saveConfig(raw)
+			// On a static build there is no server to write public/config.json —
+			// fall back to this browser's own localStorage instead, so the edit at
+			// least survives a refresh on this device. "Download" is how the change
+			// gets onto the actual deployed file.
+			const result = isDevServer ? await saveConfig(raw) : saveLocalConfig(raw)
 			if (result.ok) {
-				setStatus(`сохранено ${new Date().toLocaleTimeString()}`, 'ok')
+				const label = isDevServer ? 'збережено' : 'збережено локально (лише цей браузер)'
+				setStatus(`${label} ${new Date().toLocaleTimeString()}`, 'ok')
 			} else {
-				// No dev server behind the page (a built preview) — the panel still
-				// works, the change just cannot be persisted from here.
-				setStatus(`не сохранено: ${result.error}`, 'error')
+				// No dev server behind the page and localStorage unavailable — the
+				// panel still works, the change just cannot be persisted anywhere.
+				setStatus(`не збережено: ${result.error}`, 'error')
 			}
 		}, 300)
 	}
@@ -280,12 +301,14 @@ export async function initDevMenu(initialConfig, onApply, { fields = CORE_FIELDS
 
 	const hint = document.createElement('p')
 	hint.className = 'devmenu__hint'
-	hint.textContent = 'Изменения сразу сохраняются в public/config.json.'
+	hint.textContent = isDevServer
+		? 'Зміни одразу зберігаються в public/config.json.'
+		: 'Зміни зберігаються лише в цьому браузері (localStorage). Щоб опублікувати їх на сайті — натисніть "Скачати" і замініть config.json на хостингу.'
 	body.appendChild(hint)
 
 	status = document.createElement('p')
 	status.className = 'devmenu__status'
-	status.textContent = 'ожидание'
+	status.textContent = 'очікування'
 	body.appendChild(status)
 
 	const foot = document.createElement('div')
@@ -305,25 +328,10 @@ export async function initDevMenu(initialConfig, onApply, { fields = CORE_FIELDS
 	// which is handy for re-running the intro after a win.
 	button('Перезапуск', true, () => onApply(config))
 
-	button('Загрузить из файла', false, async () => {
-		const response = await fetch(CONFIG_URL, { cache: 'no-store' })
-		raw = await response.json()
-		config = normalizeConfig(raw)
-		sync(config)
-		onApply(config)
-		setStatus('загружено из файла', 'ok')
-	})
-
 	// Export the file as written, comments and all.
 	const exportable = () => JSON.stringify(raw, null, '\t')
 
-	button('Копировать', false, async (event) => {
-		await navigator.clipboard.writeText(exportable())
-		event.target.textContent = 'Скопировано'
-		setTimeout(() => { event.target.textContent = 'Копировать' }, 1200)
-	})
-
-	button('Скачать', false, () => {
+	button('Скачати', false, () => {
 		const url = URL.createObjectURL(new Blob([exportable()], { type: 'application/json' }))
 		const link = document.createElement('a')
 		link.href = url
@@ -331,6 +339,25 @@ export async function initDevMenu(initialConfig, onApply, { fields = CORE_FIELDS
 		link.click()
 		URL.revokeObjectURL(url)
 	})
+
+	// Only meaningful in production: undoes this browser's local edits and goes
+	// back to whatever public/config.json actually has on the server. In dev,
+	// raw already IS public/config.json (every edit writes straight to it), so
+	// there is nothing local to discard.
+	if (!isDevServer) {
+		button('Скинути локальні зміни', false, async () => {
+			clearLocalConfig()
+			try {
+				raw = await (await fetch(CONFIG_URL, { cache: 'no-store' })).json()
+			} catch {
+				raw = structuredClone(config)
+			}
+			config = normalizeConfig(raw)
+			sync(config)
+			onApply(config)
+			setStatus('локальні зміни скинуто', 'ok')
+		})
+	}
 
 	panel.append(head, body, foot)
 	document.body.appendChild(panel)

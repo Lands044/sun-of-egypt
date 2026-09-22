@@ -64,11 +64,61 @@ async function fetchConfig(url) {
 	return response.json()
 }
 
+// Where the production-only devmenu (no write endpoint behind a static build)
+// keeps its edits — see saveLocalConfig()/loadLocalConfig() below.
+const LOCAL_STORAGE_KEY = 'config:local'
+
+const readLocalStorage = () => {
+	try {
+		const raw = localStorage.getItem(LOCAL_STORAGE_KEY)
+		return raw ? JSON.parse(raw) : null
+	} catch {
+		// Private browsing / storage disabled / corrupted entry — treat as absent.
+		return null
+	}
+}
+
+/**
+ * The raw config last saved locally (browser-only, this device), or null if
+ * none was saved, or storage is unavailable. Read by the devmenu to seed the
+ * panel with whatever this browser last edited.
+ */
+export const loadLocalConfig = readLocalStorage
+
+/**
+ * Persists the raw config to this browser's localStorage. Used by the devmenu
+ * on a static build (no write endpoint behind it — see saveConfig() for the
+ * dev-server counterpart) so an edit survives a refresh on this device, even
+ * though it can never reach public/config.json on the server.
+ *
+ * Returns { ok, error }.
+ */
+export function saveLocalConfig(raw) {
+	try {
+		localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(raw))
+		return { ok: true }
+	} catch (error) {
+		return { ok: false, error: error.message }
+	}
+}
+
+/** Clears the locally saved override, so the next load falls back to config.json. */
+export function clearLocalConfig() {
+	try {
+		localStorage.removeItem(LOCAL_STORAGE_KEY)
+	} catch {
+		// Nothing to clean up if storage was never reachable.
+	}
+}
+
 /**
  * Resolves the config for this page load.
  *
  * Priority: window.<INJECT_GLOBAL> (injected by a PWA host)
  *        -> ?config=<url> (per-link override)
+ *        -> this browser's local devmenu edits (see saveLocalConfig()) — only
+ *           relevant on a static build, where the panel cannot write back to
+ *           public/config.json and falls back to localStorage instead
  *        -> public/config.json
  *        -> built-in defaults
  */
@@ -77,12 +127,23 @@ export async function loadConfig({ injectGlobal = 'LANDING_CONFIG' } = {}) {
 	if (isPlainObject(injected)) return normalizeConfig(injected)
 
 	const override = new URLSearchParams(window.location.search).get('config')
-	const url = override ? new URL(override, document.baseURI).href : CONFIG_URL
+	if (override) {
+		const url = new URL(override, document.baseURI).href
+		try {
+			return normalizeConfig(await fetchConfig(url))
+		} catch (error) {
+			console.warn(`[config] falling back to defaults, could not load ${url}:`, error.message)
+			return normalizeConfig({})
+		}
+	}
+
+	const local = readLocalStorage()
+	if (isPlainObject(local)) return normalizeConfig(local)
 
 	try {
-		return normalizeConfig(await fetchConfig(url))
+		return normalizeConfig(await fetchConfig(CONFIG_URL))
 	} catch (error) {
-		console.warn(`[config] falling back to defaults, could not load ${url}:`, error.message)
+		console.warn(`[config] falling back to defaults, could not load ${CONFIG_URL}:`, error.message)
 		return normalizeConfig({})
 	}
 }

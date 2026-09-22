@@ -10,7 +10,7 @@ core kit у цей проєкт. Він призначений для запус
 У проєкт щойно встановлено `config-kit` — систему рантайм-конфігурації для
 лендінгу-гри, перенесену з chicken-road-example. Ядро (`src/js/config/config.js`,
 `assets.js`, `devmenu.js`, `vite-plugins/config-writer.js`) вже на місці й
-game-агностичне — воно не потребує змін. `vite.config.js` щойно пропатчено для роздачі
+game-агностичне — воно не потребує змін. `vite.config.js` вже був підключений раніше для роздачі
 `public/config.json` та dev-only ендпоінту запису конфігу.
 
 ## У цьому проєкті вже була своя гра
@@ -18,9 +18,13 @@ game-агностичне — воно не потребує змін. `vite.con
 Встановлення не перезаписало наступні файли, бо вони вже існували в проєкті —
 ймовірно, там своя ігрова логіка:
 
+- `src/components/pages/index/devmenu.fields.js`
 - `src/components/pages/index/index.html`
 - `src/components/pages/index/index.js`
 - `src/components/pages/index/index.scss`
+- `src/components/pages/index/render.js`
+- `src/js/config/game.defaults.js`
+- `src/js/config/normalize.js`
 
 Твоє завдання — **підключити цю наявну гру до config-kit, не переписуючи її
 логіку з нуля.** Постав це в основу.
@@ -66,9 +70,13 @@ game-агностичне — воно не потребує змін. `vite.con
 4. У кінці `src/components/pages/index/index.js` додай виклик
    `registerGameConfig()` (з нового `normalize.js`) ПЕРЕД `loadConfig()`,
    підключи `watchConfig()` для live-релоаду в dev, і (за
-   `import.meta.env.DEV && config.dev.menu`) — `initDevMenu` з
-   `@js/config/devmenu.js`, передавши власний `GAME_FIELDS` разом з
-   `CORE_FIELDS`.
+   `config.dev.menu`) — `initDevMenu` з `@js/config/devmenu.js`, передавши
+   власний `GAME_FIELDS` разом з `CORE_FIELDS`. За замовчуванням панель
+   вантажиться і в production-білді — там вона пише зміни в localStorage
+   браузера замість `public/config.json` (нема кому приймати запис на
+   статичному хостингу), з кнопкою "Скачати" для експорту готового файлу.
+   Якщо потрібен строго dev-only варіант (панель зникає з `dist/` повністю) —
+   постав умову `import.meta.env.DEV && config.dev.menu`, як було раніше.
 
 5. Онови `public/config.json` так, щоб він відображав реальні поточні
    значення гри (те, що зараз хардкоджено в коді) — щоб після інтеграції
@@ -77,8 +85,12 @@ game-агностичне — воно не потребує змін. `vite.con
 6. Перевір: `npm run dev`, відкрий сторінку, переконайся що гра виглядає й
    грається так само, як до змін. Зміни щось у панелі конфігу (текст кнопки
    або число) — переконайся, що сторінка оновлюється без релоаду.
-   `npm run build` — переконайся, що `dist/config.json` існує і
-   `grep -r devmenu dist/` не знаходить нічого.
+   `npm run build` — переконайся, що `dist/config.json` існує. Якщо
+   лишив панель dev-only (`import.meta.env.DEV && config.dev.menu`) —
+   `grep -r devmenu dist/` має бути порожнім; якщо панель ships і в
+   production (дефолт) — знаходження там очікуване, перевір натомість, що
+   панель у зібраному `dist/` відкривається і пише в localStorage (бейдж
+   "prod", а не "dev").
 
 **Не роби:** не переписуй анімації/CSS-геометрію "про всяк випадок", не
 рефактори те, що не звʼязано з винесенням значень у конфіг, не видаляй
